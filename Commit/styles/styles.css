@@ -1,12 +1,22 @@
 * {
     margin: 0;
     padding: 0;
+<<<<<<<< HEAD:Commit/styles/styles.css
     box-sizing: border-box;    
+========
+    box-sizing: border-box;
+    
+>>>>>>>> main:SaaS/Style/styles.css
   }
 
   body {
     height: fit-content; 
+<<<<<<<< HEAD:Commit/styles/styles.css
     font-family: 'Noto Sans', sans-serif;      
+========
+    font-family: 'Noto Sans', sans-serif; 
+    align-content: center;        
+>>>>>>>> main:SaaS/Style/styles.css
   }
 
   nav {
