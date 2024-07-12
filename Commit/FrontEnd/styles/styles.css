@@ -86,7 +86,9 @@
   footer {
     width: 100%;
     height: 15vh;
-    background-color: rgb(231, 105, 74);    
+    background-color: orange;
+    display: flex;
+    align-items: center;
   }
 
   .templates h2 {
@@ -102,4 +104,7 @@
   p {
     padding-bottom: 0;
     padding-top: 0;
+  }
+  ul{
+    list-style-type: none;
   }
