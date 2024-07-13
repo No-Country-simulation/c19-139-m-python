@@ -1,14 +1,12 @@
 asgiref==3.8.1
 click==8.1.7
 colorama==0.4.6
-fastapi==0.68.0
+fastapi==0.99.0
 h11==0.14.0
-mysql==0.0.3
 mysql-connector-python==8.0.27
-mysqlclient==2.2.1
 protobuf==5.27.2
 pydantic==1.10.17
 python-dotenv==0.21.1
 starlette==0.14.2
 typing_extensions==4.12.2
-uvicorn==0.15.0
+uvicorn==0.22.0
