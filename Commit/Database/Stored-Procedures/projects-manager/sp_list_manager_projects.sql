@@ -14,7 +14,11 @@ BEGIN
     IF manager_role = 'manager' THEN
         SELECT 
             p.project_id,
-            p.project_name,
+            p.name AS project_name,
+            p.description,
+            p.start_date,
+            p.due_date,
+            p.status,
             COUNT(pm.user_id) AS member_count
         FROM 
             Projects p
@@ -22,7 +26,7 @@ BEGIN
         WHERE 
             p.manager_id = p_manager_id
         GROUP BY 
-            p.project_id, p.project_name;
+            p.project_id, p.name, p.description, p.start_date, p.due_date, p.status;
     ELSE
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Only managers can list their projects';
