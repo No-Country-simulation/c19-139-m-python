@@ -1,5 +1,6 @@
 from app.config.db_conexion import data_conexion
 from app.models.user import UserCreateRequest, UserUpdateRequest, UserAssignRequest
+from app.models.project import ProjectCreateRequest
 
 async def create_user(user_request: UserCreateRequest):
     params = [
@@ -28,4 +29,16 @@ async def assign_member(user_request: UserAssignRequest):
         user_request.member_password
     ]
     result = data_conexion.execute_procedure('sp_assign_member_to_project', params)
+    return result
+
+async def create_project(user_request: ProjectCreateRequest):
+    params = [
+        user_request.manager_id,
+        user_request.name,
+        user_request.description,
+        user_request.start_date,
+        user_request.due_date,
+        user_request.status
+    ]
+    result = data_conexion.execute_procedure('sp_create_project', params)
     return result
