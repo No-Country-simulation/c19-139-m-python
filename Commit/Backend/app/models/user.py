@@ -18,3 +18,10 @@ class UserUpdateRequest(BaseModel):
     user_id: int
     email: Optional[EmailStr] = None
     password: Optional[str] = None
+
+class UserAssignRequest(BaseModel):
+    manager_id: int
+    project_id: int
+    member_name: str
+    member_email: EmailStr
+    member_password: str
