@@ -57,8 +57,8 @@ BEGIN
                 t.project_id = p_project_id;
 
             SELECT 
-                (SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id AND status = 'completed') /
-                (SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id) * 100 AS project_progress;
+                IFNULL((SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id AND status = 'completed'), 0) /
+                IFNULL((SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id), 1) * 100 AS project_progress;
 
             SELECT 
                 t.task_id,
@@ -72,8 +72,8 @@ BEGIN
                 t.project_id = p_project_id AND t.due_date < CURDATE() AND t.status <> 'completed';
 
             SELECT 
-                (SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id AND status = 'completed' AND due_date >= CURDATE()) /
-                (SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id) * 100 AS on_time_completion_rate;
+                IFNULL((SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id AND status = 'completed' AND due_date >= CURDATE()), 0) /
+                IFNULL((SELECT COUNT(*) FROM Tasks WHERE project_id = p_project_id), 1) * 100 AS on_time_completion_rate;
 
             SELECT 
                 t.status,
