@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from app.models.user import UserCreateRequest, UserUpdateRequest, UserAssignRequest
+from app.models.project import ProjectCreateRequest
 from app.controllers.manager_controller import (
     create_user,
     update_user,
-    assign_member
+    assign_member,
+    create_project
 )
 
 router = APIRouter()
@@ -24,3 +26,7 @@ async def route_update_user_data(user_request: UserUpdateRequest):
 async def route_assign_member_to_project(project_id: int, user_request: UserAssignRequest):
     return await assign_member(project_id, user_request)
 
+# Endpoint to create a project
+@router.post("/projects")
+async def route_create_new_project(user_request: ProjectCreateRequest):
+    return await create_project(user_request)
