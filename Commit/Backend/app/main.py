@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.models.user import UsersLoginRequest
 from app.config.db_conexion import data_conexion
 from app.utils.utils import create_access_token, settings
+from app.routes import manager
 
 # Setting allowed origins for CORS
 origins = [
@@ -46,3 +47,29 @@ async def login(user_request: UsersLoginRequest, response: Response):
     # CORS response should come after returning token
     response.headers["Access-Control-Allow-Origin"] = "http://localhost:8080"
     raise HTTPException(status_code=401, detail="Incorrect credentials")
+
+# Middleware to validate the token in the routes
+async def user_token_validation(request: Request, call_next):
+    if request.url.path.startswith("/login") == False:
+        token = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        role: str = payload.get("support", "manager", "member")
+
+        if request.url.path.startswith("support"):
+            verified = (role == "support")
+
+        elif request.url.path.startswith("manager"):
+            verified = (role == "manager")
+
+        elif request.url.path.startswith("member"):
+            verified = (role == "member")
+
+        else:
+            verified = False
+
+        if verified:
+            return await call_next(request)
+        else:
+            raise HTTPException(status_code=403, detail="You do not have permissions to access")
+
+    return await call_next(request)
