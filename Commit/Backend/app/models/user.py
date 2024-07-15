@@ -25,3 +25,7 @@ class UserAssignRequest(BaseModel):
     member_name: str
     member_email: EmailStr
     member_password: str
+
+class UsersLoginRequest(BaseModel):
+    email: EmailStr
+    password_hash: str
