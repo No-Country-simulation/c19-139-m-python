@@ -7,3 +7,12 @@ origins = [
 ]
 
 app = FastAPI()
+
+# CORS middleware to handle origin allowed requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
