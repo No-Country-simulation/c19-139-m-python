@@ -6,7 +6,8 @@ from app.controllers.manager_controller import (
     create_user,
     update_user,
     assign_member,
-    create_project
+    create_project,
+    list_projects
 )
 
 router = APIRouter()
@@ -30,3 +31,8 @@ async def route_assign_member_to_project(project_id: int, user_request: UserAssi
 @router.post("/projects")
 async def route_create_new_project(user_request: ProjectCreateRequest):
     return await create_project(user_request)
+
+# Endpoint to list all the projects of a manager
+@router.get("/projects")
+async def route_list_manager_projects(manager_id: int):
+    return await list_projects(manager_id)
