@@ -8,6 +8,7 @@ CREATE TABLE Tasks (
     description TEXT,
     status ENUM('to do', 'in progress', 'completed') DEFAULT 'to do',
     priority ENUM('low', 'medium', 'high') DEFAULT 'medium',
+    start_date DATE,
     due_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (project_id) REFERENCES Projects(project_id),
