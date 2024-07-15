@@ -75,3 +75,8 @@ async def user_token_validation(request: Request, call_next):
     return await call_next(request)
 
 app.include_router(manager.router, prefix="/manager", tags=["Manager"])
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
