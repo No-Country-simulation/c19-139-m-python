@@ -73,3 +73,5 @@ async def user_token_validation(request: Request, call_next):
             raise HTTPException(status_code=403, detail="You do not have permissions to access")
 
     return await call_next(request)
+
+app.include_router(manager.router, prefix="/manager", tags=["Manager"])
