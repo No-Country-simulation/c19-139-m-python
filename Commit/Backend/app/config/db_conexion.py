@@ -15,10 +15,10 @@ class DataConexion:
         - Returns a connection object.
         """
         try:
-            host = getenv("DB_HOST")
-            user = getenv("DB_USER")
-            password = getenv("DB_PASSWORD")
-            database = getenv("DB_NAME")
+            host = os.getenv("DB_HOST")
+            user = os.getenv("DB_USER")
+            password = os.getenv("DB_PASSWORD")
+            database = os.getenv("DB_NAME")
 
             conexion = mysql.connector.connect(
                 host=host,
@@ -56,8 +56,8 @@ class DataConexion:
                 cursor.callproc(procedure_name, params)
 
                 # We go through the results of the stored procedure
-                for result in cursor.stored_result():
-                    result.append(result.fetchall())
+                for result in cursor.stored_results():
+                    results.append(result.fetchall())
                 
                 cnn.commit()
 
