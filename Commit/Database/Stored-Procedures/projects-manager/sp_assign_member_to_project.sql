@@ -21,11 +21,12 @@ BEGIN
     FROM Users
     WHERE user_id = p_manager_id;
 
-    SELECT created_by INTO project_creator
+    SELECT manager_id INTO project_creator
     FROM Projects
     WHERE project_id = p_project_id;
 
     IF manager_role = 'manager' AND project_creator = p_manager_id THEN
+
         SELECT COUNT(*) INTO user_count
         FROM Users
         WHERE email = p_member_email;
@@ -34,7 +35,6 @@ BEGIN
             INSERT INTO Users (name, email, password_hash, role)
             VALUES (p_member_name, p_member_email, hashedPassword, 'member');
             
-            -- Get the new member's ID
             SELECT LAST_INSERT_ID() INTO member_id;
 
             INSERT INTO Project_Members (user_id, project_id, role)
