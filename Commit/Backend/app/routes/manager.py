@@ -8,7 +8,8 @@ from app.controllers.manager_controller import (
     assign_member,
     create_project,
     list_projects,
-    delete_member
+    delete_member,
+    project_details
 )
 
 router = APIRouter()
@@ -42,3 +43,8 @@ async def route_list_manager_projects(manager_id: int):
 @router.delete("/members/{user_id}")
 async def route_delete_member_from_project(user_id: int):
     return await delete_member(user_id)
+
+# Endpoint to view details of a specific project
+@router.get("/projects/{project_id}")
+async def view_project_details(project_id: int, manager_id: int):
+    return await project_details(project_id, manager_id)
