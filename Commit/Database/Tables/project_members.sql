@@ -6,6 +6,7 @@ CREATE TABLE Project_Members (
     project_id INT,
     role VARCHAR(255),
     seniority ENUM('trainee', 'junior', 'senior'),
+    availability ENUM('free', 'busy') DEFAULT 'free',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (project_id) REFERENCES Projects(project_id)
