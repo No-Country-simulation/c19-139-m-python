@@ -33,12 +33,11 @@ CREATE TABLE Project_Members (
     user_id INT,
     project_id INT,
     role VARCHAR(255),
+    seniority ENUM('trainee', 'junior', 'senior'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (project_id) REFERENCES Projects(project_id)
 );
-
-DROP TABLE IF EXISTS Tasks;
 
 CREATE TABLE Tasks (
     task_id INT PRIMARY KEY AUTO_INCREMENT,
