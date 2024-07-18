@@ -1,9 +1,10 @@
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from app.models.user import UsersLoginRequest
+from app.models.user import UsersLoginRequest, User
 from app.config.db_conexion import data_conexion
 from app.utils.utils import create_access_token, settings
 from app.routes import manager
+import jwt
 
 # Setting allowed origins for CORS
 origins = [
@@ -26,16 +27,16 @@ app.add_middleware(
 async def login(user_request: UsersLoginRequest, response: Response):
     params = [
         user_request.email,
-        user_request.password_hash
+        user_request.password_hash  # Asegúrate de que esto es el hash de la contraseña
     ]
-    users = data_conexion.execute_procedure('sp_user_login')
+    users = data_conexion.execute_procedure('sp_user_login', params)
 
-    user = None
-    if users is not None and 'result' in users and users['result']:
-        user = users['result'][0][0]
+    # La lista de resultados puede ser vacía si no hay coincidencias
+    if users is not None and 'result' in users and len(users['result']) > 0:
+        user = users['result'][0]
 
-    if user is not None:
-        access_token = create_access_token(data={"sub": user["email"], "role": user["role"]})
+        # Crear el token de acceso
+        access_token = create_access_token(data={"sub": user["user_id"], "role": user["role"]})
         response.set_cookie(
             key="access_token",
             value=access_token,
@@ -44,8 +45,7 @@ async def login(user_request: UsersLoginRequest, response: Response):
         )
 
         return {"access_token": access_token, "token_type": "bearer"}
-    # CORS response should come after returning token
-    response.headers["Access-Control-Allow-Origin"] = "http://localhost:8080"
+
     raise HTTPException(status_code=401, detail="Incorrect credentials")
 
 # Middleware to validate the token in the routes
@@ -53,7 +53,7 @@ async def user_token_validation(request: Request, call_next):
     if request.url.path.startswith("/login") == False:
         token = request.headers.get("Authorization", "").replace("Bearer ", "").strip()
         payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
-        role: str = payload.get("support", "manager", "member")
+        role: str = payload.get("role", "support", "manager", "member")
 
         if request.url.path.startswith("support"):
             verified = (role == "support")
