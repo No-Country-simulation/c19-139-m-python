@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import date
 from enum import Enum
@@ -13,9 +13,9 @@ class Project(BaseModel):
     manager_id: int
     name: str
     description: Optional[str]
-    start_date: Optional[str]
-    due_date: Optional[str]
-    status: ProjectStatusEnum
+    start_date: Optional[date]
+    due_date: Optional[date]
+    status: ProjectStatusEnum = ProjectStatusEnum.not_started
     created_at: Optional[str]
 
 class ProjectCreateRequest(BaseModel):
@@ -24,4 +24,4 @@ class ProjectCreateRequest(BaseModel):
     description: Optional[str] = None
     start_date: Optional[date] = None
     due_date: Optional[date] = None
-    status: Optional[str] = 'not started'
+    status: Optional[ProjectStatusEnum] = ProjectStatusEnum.not_started 

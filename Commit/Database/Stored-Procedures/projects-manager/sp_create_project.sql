@@ -20,8 +20,8 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'The manager does not exist or is not a manager';
     ELSE
-        INSERT INTO Projects (manager_id, name, description, start_date, due_date)
-        VALUES (p_manager_id, p_name, p_description, p_start_date, p_due_date);
+        INSERT INTO Projects (manager_id, name, description, start_date, due_date, status)
+        VALUES (p_manager_id, p_name, p_description, p_start_date, p_due_date, 'not started');
     END IF;
 END$$
 

@@ -1,6 +1,7 @@
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_delete_member $$
+
 CREATE PROCEDURE sp_delete_member(
     IN p_manager_id INT,
     IN p_member_id INT
@@ -30,4 +31,5 @@ BEGIN
         SET MESSAGE_TEXT = 'Only managers can delete members';
     END IF;
 END$$
+
 DELIMITER ;
