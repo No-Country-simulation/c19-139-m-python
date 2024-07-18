@@ -89,3 +89,13 @@ async def count_todo_tasks(manager_id: int, project_id: int):
     ]
     result = data_conexion.execute_procedure('sp_count_todo_tasks', params)
     return result
+
+async def create_member(manager_id: int, member_request: UserCreateRequest):
+    params = [
+        manager_id,
+        member_request.name,
+        member_request.email,
+        member_request.password
+    ]
+    result = data_conexion.execute_procedure('sp_create_member', params)
+    return result
