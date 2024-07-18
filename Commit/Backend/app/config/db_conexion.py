@@ -55,10 +55,9 @@ class DataConexion:
                 cursor = cnn.cursor(dictionary=True)
                 cursor.callproc(procedure_name, params)
 
-                # We go through the results of the stored procedure
                 for result in cursor.stored_results():
-                    results.append(result.fetchall())
-                
+                    results = result.fetchall()
+            
                 cnn.commit()
 
             except Error as e:
@@ -72,4 +71,4 @@ class DataConexion:
             return {'result': [], 'params': args}
 
 # An instance of the DataConexion class is created
-data_conexion = DataConexion
+data_conexion = DataConexion()

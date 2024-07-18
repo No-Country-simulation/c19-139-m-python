@@ -1,12 +1,18 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from enum import Enum
+
+class RoleEnum(str, Enum):
+    support = 'support'
+    manager = 'manager'
+    member = 'member'
 
 class User(BaseModel):
     user_id: Optional[int]
     name: str
     email: EmailStr
     password_hash: str
-    role: str
+    role: RoleEnum
     created_at: Optional[str]
 
 class UserCreateRequest(BaseModel):
