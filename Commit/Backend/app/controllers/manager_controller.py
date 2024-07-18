@@ -31,14 +31,13 @@ async def assign_member_to_project(manager_id: int, project_id: int, member_emai
     result = data_conexion.execute_procedure('sp_assign_member_to_project', params)
     return result
 
-async def create_project(user_request: ProjectCreateRequest):
+async def create_project(project_request: ProjectCreateRequest):
     params = [
-        user_request.manager_id,
-        user_request.name,
-        user_request.description,
-        user_request.start_date,
-        user_request.due_date,
-        user_request.status
+        project_request.manager_id,
+        project_request.name,
+        project_request.description,
+        project_request.start_date,
+        project_request.due_date
     ]
     result = data_conexion.execute_procedure('sp_create_project', params)
     return result
