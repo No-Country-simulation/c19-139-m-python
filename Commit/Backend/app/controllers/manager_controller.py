@@ -101,9 +101,9 @@ async def create_member(manager_id: int, member_request: UserCreateRequest):
     result = data_conexion.execute_procedure('sp_create_member', params)
     return result
 
-async def create_task(task_request: TaskCreateRequest):
+async def create_task(task_request: TaskCreateRequest, manager_id):
     params = [
-        task_request.manager_id,
+        manager_id,
         task_request.project_id,
         task_request.title,
         task_request.description,
