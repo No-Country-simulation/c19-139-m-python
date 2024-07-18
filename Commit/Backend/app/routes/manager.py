@@ -5,7 +5,7 @@ from app.models.project import ProjectCreateRequest
 from app.controllers.manager_controller import (
     create_user,
     update_user,
-    assign_member,
+    assign_member_to_project,
     create_project,
     list_projects,
     delete_member,
@@ -27,7 +27,13 @@ async def route_update_user_data(user_request: UserUpdateRequest):
 # Enpoint to assign a member to a project
 @router.post("/projects/{project_id}/members")
 async def route_assign_member_to_project(project_id: int, user_request: UserAssignRequest):
-    return await assign_member(project_id, user_request)
+    manager_id = user_request.manager_id
+    member_email = user_request.member_email
+    role = user_request.role
+    seniority = user_request.seniority
+
+    result = await assign_member_to_project(manager_id, project_id, member_email, role, seniority)
+    return {"message": result}
 
 # Endpoint to create a project
 @router.post("/projects")

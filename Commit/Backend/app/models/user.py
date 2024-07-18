@@ -7,6 +7,11 @@ class RoleEnum(str, Enum):
     manager = 'manager'
     member = 'member'
 
+class SeniorityEnum(str, Enum):
+    trainee = 'trainee'
+    junior = 'junior'
+    senior = 'senior'
+
 class User(BaseModel):
     user_id: Optional[int]
     name: str
@@ -31,6 +36,8 @@ class UserAssignRequest(BaseModel):
     member_name: str
     member_email: EmailStr
     member_password: str
+    role: str
+    seniority: SeniorityEnum
 
 class UsersLoginRequest(BaseModel):
     email: EmailStr
