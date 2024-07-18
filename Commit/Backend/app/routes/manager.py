@@ -15,7 +15,8 @@ from app.controllers.manager_controller import (
     count_in_progress_tasks,
     count_todo_tasks,
     create_member,
-    create_task
+    create_task,
+    get_busy_members
 )
 
 router = APIRouter()
@@ -95,3 +96,8 @@ async def route_create_member(manager_id: int, member_request: UserCreateRequest
 @router.post("/tasks")
 async def route_create_task(task_request: TaskCreateRequest):
     return await create_task(task_request)
+
+# Endpoint to get busy members
+@router.get("/busy-members")
+async def route_get_busy_members():
+    return await get_busy_members()
