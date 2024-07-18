@@ -10,7 +10,8 @@ from app.controllers.manager_controller import (
     list_projects,
     delete_member,
     project_details,
-    assign_task
+    assign_task,
+    count_completed_tasks
 )
 
 router = APIRouter()
@@ -61,3 +62,9 @@ async def view_project_details(project_id: int, manager_id: int):
 async def route_assign_task(task_id: int, assigned_to: int):
     result = await assign_task(task_id, assigned_to)
     return {"message": result}
+
+# Endpoint to count completed tasks by priority in a project
+@router.get("/projects/{project_id}/completed-tasks")
+async def route_count_completed_tasks(project_id: int, manager_id: int):
+    result = await count_completed_tasks(manager_id, project_id)
+    return result
