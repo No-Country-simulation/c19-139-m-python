@@ -115,3 +115,7 @@ async def create_task(task_request: TaskCreateRequest):
     ]
     result = await data_conexion.execute_procedure('sp_create_task', params)
     return result
+
+async def get_busy_members():
+    result = data_conexion.execute_procedure('sp_get_busy_members')
+    return result
