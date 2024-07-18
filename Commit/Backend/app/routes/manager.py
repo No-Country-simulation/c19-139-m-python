@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from app.models.user import UserCreateRequest, UserUpdateRequest, UserAssignRequest
 from app.models.project import ProjectCreateRequest
+from app.models.task import TaskCreateRequest
 from app.controllers.manager_controller import (
     create_user,
     update_user,
@@ -13,7 +14,8 @@ from app.controllers.manager_controller import (
     count_completed_tasks,
     count_in_progress_tasks,
     count_todo_tasks,
-    create_member
+    create_member,
+    create_task
 )
 
 router = APIRouter()
@@ -87,3 +89,8 @@ async def route_count_todo_tasks(project_id: int, manager_id: int):
 @router.post("/members")
 async def route_create_member(manager_id: int, member_request: UserCreateRequest):
     return await create_member(manager_id, member_request)
+
+# Endpoint to create a task
+@router.post("/tasks")
+async def route_create_task(task_request: TaskCreateRequest):
+    return await create_task(task_request)
