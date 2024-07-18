@@ -9,7 +9,8 @@ from app.controllers.manager_controller import (
     create_project,
     list_projects,
     delete_member,
-    project_details
+    project_details,
+    assign_task
 )
 
 router = APIRouter()
@@ -54,3 +55,9 @@ async def route_delete_member_from_project(user_id: int):
 @router.get("/projects/{project_id}")
 async def view_project_details(project_id: int, manager_id: int):
     return await project_details(project_id, manager_id)
+
+# Endpoint to assign a task
+@router.post("/tasks/{task_id}/assign")
+async def route_assign_task(task_id: int, assigned_to: int):
+    result = await assign_task(task_id, assigned_to)
+    return {"message": result}
