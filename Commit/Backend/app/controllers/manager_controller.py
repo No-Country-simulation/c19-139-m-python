@@ -65,3 +65,11 @@ async def assign_task(task_id: int, assigned_to: int):
     ]
     result = data_conexion.execute_procedure('sp_assign_task', params)
     return result
+
+async def count_completed_tasks(manager_id: int, project_id: int):
+    params = [
+        manager_id,
+        project_id
+    ]
+    result = data_conexion.execute_procedure('sp_count_completed_tasks', params)
+    return result
