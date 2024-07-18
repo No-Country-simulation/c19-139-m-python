@@ -1,25 +1,28 @@
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_create_project $$
+
 CREATE PROCEDURE sp_create_project(
     IN p_manager_id INT,
-    IN p_project_name VARCHAR(255),
-    IN p_description TEXT
+    IN p_name VARCHAR(255),
+    IN p_description TEXT,
+    IN p_start_date DATE,
+    IN p_due_date DATE
 )
 BEGIN
-    DECLARE manager_role ENUM('support', 'manager', 'member');
+    DECLARE v_manager_exists INT;
 
-    SELECT role INTO manager_role
+    SELECT COUNT(*) INTO v_manager_exists
     FROM Users
-    WHERE user_id = p_manager_id;
+    WHERE user_id = p_manager_id AND role = 'manager';
 
-    IF manager_role = 'manager' THEN
-        INSERT INTO Projects (name, description, created_by)
-        VALUES (p_project_name, p_description, p_manager_id);
-        SELECT 'Project created successfully' AS success_message;
-    ELSE
+    IF v_manager_exists = 0 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Only managers can create projects';
+        SET MESSAGE_TEXT = 'The manager does not exist or is not a manager';
+    ELSE
+        INSERT INTO Projects (manager_id, name, description, start_date, due_date)
+        VALUES (p_manager_id, p_name, p_description, p_start_date, p_due_date);
     END IF;
 END$$
+
 DELIMITER ;
