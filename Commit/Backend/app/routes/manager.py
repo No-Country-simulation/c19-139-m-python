@@ -52,9 +52,10 @@ async def route_list_manager_projects(manager_id: int):
     return await list_projects(manager_id)
 
 # Endpoint to list all the projects of a manager
-@router.delete("/members/{user_id}")
-async def route_delete_member_from_project(user_id: int):
-    return await delete_member(user_id)
+@router.delete("/members/{member_id}")
+async def route_delete_member(manager_id: int, member_id: int):
+    result = await delete_member(manager_id, member_id)
+    return result
 
 # Endpoint to view details of a specific project
 @router.get("/projects/{project_id}")
