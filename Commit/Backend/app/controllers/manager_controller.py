@@ -81,3 +81,11 @@ async def count_in_progress_tasks(manager_id: int, project_id: int):
     ]
     result = data_conexion.execute_procedure('sp_count_in_progress_tasks', params)
     return result
+
+async def count_todo_tasks(manager_id: int, project_id: int):
+    params = [
+        manager_id,
+        project_id
+    ]
+    result = data_conexion.execute_procedure('sp_count_todo_tasks', params)
+    return result
