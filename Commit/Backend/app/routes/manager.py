@@ -1,5 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel
+from fastapi import APIRouter
 from app.models.user import UserCreateRequest, UserUpdateRequest, UserAssignRequest
 from app.models.project import ProjectCreateRequest
 from app.controllers.manager_controller import (
@@ -13,7 +12,8 @@ from app.controllers.manager_controller import (
     assign_task,
     count_completed_tasks,
     count_in_progress_tasks,
-    count_todo_tasks
+    count_todo_tasks,
+    create_member
 )
 
 router = APIRouter()
@@ -77,8 +77,13 @@ async def route_count_in_progress_tasks(project_id: int, manager_id: int):
     result = await count_in_progress_tasks(manager_id, project_id)
     return result
 
-# Endpoint para contar tareas pendientes por prioridad en un proyecto
+# Endpoint to count pending tasks by priority in a project
 @router.get("/projects/{project_id}/todo-tasks")
 async def route_count_todo_tasks(project_id: int, manager_id: int):
     result = await count_todo_tasks(manager_id, project_id)
     return result
+
+# Endpoint to create a new member
+@router.post("/members")
+async def route_create_member(manager_id: int, member_request: UserCreateRequest):
+    return await create_member(manager_id, member_request)
