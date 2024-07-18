@@ -8,6 +8,7 @@ CREATE PROCEDURE sp_assign_task(
 BEGIN
     DECLARE assigned_member_seniority ENUM('trainee', 'junior', 'senior');
     DECLARE task_priority ENUM('low', 'medium', 'high');
+    DECLARE error_message VARCHAR(255);
 
     SELECT priority INTO task_priority
     FROM Tasks
@@ -17,16 +18,27 @@ BEGIN
     FROM Project_Members
     WHERE user_id = p_assigned_to;
 
-    IF (task_priority = 'high' AND assigned_member_seniority = 'senior') OR
-       (task_priority = 'medium' AND (assigned_member_seniority = 'senior' OR assigned_member_seniority = 'junior')) OR
-       (task_priority = 'low') THEN
+    IF assigned_member_seniority = 'trainee' AND task_priority != 'low' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Trainees can only be assigned to tasks with low priority';
+    
+    ELSEIF assigned_member_seniority = 'senior' AND task_priority = 'low' THEN
         UPDATE Tasks
         SET assigned_to = p_assigned_to
         WHERE task_id = p_task_id;
-        SELECT 'Task assigned successfully' AS success_message;
+        SET error_message = 'Note: This task has low priority.';
+    
     ELSE
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'The member does not have the appropriate seniority for this task priority';
+        UPDATE Tasks
+        SET assigned_to = p_assigned_to
+        WHERE task_id = p_task_id;
+    END IF;
+
+    IF error_message IS NOT NULL THEN
+        SELECT error_message AS success_message;
+    ELSE
+        SELECT 'Task assigned successfully' AS success_message;
     END IF;
 END$$
+
 DELIMITER ;
