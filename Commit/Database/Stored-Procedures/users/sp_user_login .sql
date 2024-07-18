@@ -8,8 +8,11 @@ CREATE PROCEDURE sp_user_login(
 )
 BEGIN
     DECLARE v_user_id INT;
-    DECLARE v_user_role ENUM('support', 'manager', 'member');
+    DECLARE v_user_role VARCHAR(255);
     DECLARE v_password_hash VARCHAR(255);
+    DECLARE hashedPassword VARCHAR(255);
+
+    SET hashedPassword = SHA2(p_password, 256);
 
     SELECT user_id, password_hash, role INTO v_user_id, v_password_hash, v_user_role
     FROM Users
@@ -19,7 +22,7 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Invalid email or password';
     ELSE
-        IF v_password_hash = p_password THEN
+        IF v_password_hash = hashedPassword THEN
             SELECT 
                 v_user_id AS user_id,
                 v_user_role AS role;
