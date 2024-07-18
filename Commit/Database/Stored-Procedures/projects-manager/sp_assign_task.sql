@@ -26,7 +26,7 @@ BEGIN
         UPDATE Tasks
         SET assigned_to = p_assigned_to
         WHERE task_id = p_task_id;
-        SET error_message = 'Note: This task has low priority.';
+        SET error_message = 'Warning: You are assigning a senior to a low priority task.';
     
     ELSE
         UPDATE Tasks
