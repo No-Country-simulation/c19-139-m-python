@@ -57,3 +57,11 @@ async def project_details(project_id: int, manager_id: int):
     params = [project_id, manager_id]
     result = data_conexion.execute_procedure('sp_view_project_details', params)
     return result
+
+async def assign_task(task_id: int, assigned_to: int):
+    params = [
+        task_id,
+        assigned_to
+    ]
+    result = data_conexion.execute_procedure('sp_assign_task', params)
+    return result
