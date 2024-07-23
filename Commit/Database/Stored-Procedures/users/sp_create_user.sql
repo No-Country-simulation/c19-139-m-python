@@ -22,7 +22,8 @@ BEGIN
         SELECT 'User created successfully as manager' AS success_message;
     ELSE
         SIGNAL SQLSTATE '45000'
-        SELECT 'A user with this email already exists' AS message;
+        SET MESSAGE_TEXT = 'A user with this email already exists';
     END IF;
 END$$
+
 DELIMITER ;
