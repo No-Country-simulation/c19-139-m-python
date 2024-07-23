@@ -1,5 +1,5 @@
 from app.config.db_conexion import data_conexion
-from app.models.user import User, UserCreateRequest, UserUpdateRequest, UserAssignRequest
+from app.models.user import User, UserCreateRequest, UserUpdateRequest, UserAssignRequest, SeniorityEnum
 from app.models.project import ProjectCreateRequest, Project
 from app.models.task import TaskCreateRequest
  
@@ -24,13 +24,13 @@ async def create_project(project_request: ProjectCreateRequest):
     result = await data_conexion.execute_procedure('sp_create_project', params)
     return result
 
-async def assign_member_to_project(manager_id: int, project_id: int, member_email: str, role: str, seniority: str):
+async def assign_member_to_project(manager_id: int, project_id: int, member_email: str, role: str, seniority: SeniorityEnum):
     params = [
         manager_id,
         project_id,
         member_email,
         role,
-        seniority
+        seniority.value
     ]
     result = await data_conexion.execute_procedure('sp_assign_member_to_project', params)
     return result
