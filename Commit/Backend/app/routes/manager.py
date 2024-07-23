@@ -45,7 +45,7 @@ async def assign_member(project_id: int, user_request: UserAssignRequest):
 
 # Endpoint to list all the projects of a manager
 @router.get("/projects")
-async def list_projects(manager_id: int):
+async def enum_projects(manager_id: int):
     return await list_projects(manager_id)
 
 # Endpoint to remove member
@@ -61,8 +61,8 @@ async def view_project_details(project_id: int, manager_id: int):
 
 # Endpoint to designate a task
 @router.post("/tasks/{task_id}")
-async def designate_task(task_id: int):
-    result = await assign_task(task_id)
+async def designate_task(task_id: int, assigned_to: int):
+    result = await assign_task(task_id, assigned_to)
     return {"message": result}
 
 # Endpoint to count completed tasks by priority in a project
