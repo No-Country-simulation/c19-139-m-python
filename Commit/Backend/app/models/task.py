@@ -32,4 +32,5 @@ class TaskCreateRequest(BaseModel):
     description: Optional[str] = None
     status: Optional[str] = 'to do'
     priority: Optional[str] = 'medium'
+    start_date: Optional[str]
     due_date: Optional[date] = None
