@@ -1,9 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from app.models.user import UserCreateRequest, UserUpdateRequest, UserAssignRequest
 from app.models.project import ProjectCreateRequest
 from app.models.task import TaskCreateRequest
 from app.controllers.manager_controller import (
-    create_user,
     update_user,
     assign_member_to_project,
     create_project,
@@ -22,19 +21,20 @@ from app.controllers.manager_controller import (
 
 router = APIRouter()
 
-# Endpoint to create a new user
-@router.post("/users")
-async def route_create_user(user_request: UserCreateRequest):
-    return await create_user(user_request)
 
 # Endpoint to update data for an existing user
 @router.put("/users")
-async def route_update_user_data(user_request: UserUpdateRequest):
+async def update_user_data(user_request: UserUpdateRequest):
     return await update_user(user_request)
+
+# Endpoint to create a project
+@router.post("/projects")
+async def create_new_project(user_request: ProjectCreateRequest):
+    return await create_project(user_request)
 
 # Enpoint to assign a member to a project
 @router.post("/projects/{project_id}/members")
-async def route_assign_member_to_project(project_id: int, user_request: UserAssignRequest):
+async def assign_member(project_id: int, user_request: UserAssignRequest):
     manager_id = user_request.manager_id
     member_email = user_request.member_email
     role = user_request.role
@@ -43,19 +43,14 @@ async def route_assign_member_to_project(project_id: int, user_request: UserAssi
     result = await assign_member_to_project(manager_id, project_id, member_email, role, seniority)
     return {"message": result}
 
-# Endpoint to create a project
-@router.post("/projects")
-async def route_create_new_project(user_request: ProjectCreateRequest):
-    return await create_project(user_request)
-
 # Endpoint to list all the projects of a manager
 @router.get("/projects")
-async def route_list_manager_projects(manager_id: int):
+async def list_projects(manager_id: int):
     return await list_projects(manager_id)
 
-# Endpoint to list all the projects of a manager
+# Endpoint to remove member
 @router.delete("/members/{member_id}")
-async def route_delete_member(manager_id: int, member_id: int):
+async def remove_member(manager_id: int, member_id: int):
     result = await delete_member(manager_id, member_id)
     return result
 
@@ -64,46 +59,46 @@ async def route_delete_member(manager_id: int, member_id: int):
 async def view_project_details(project_id: int, manager_id: int):
     return await project_details(project_id, manager_id)
 
-# Endpoint to assign a task
-@router.post("/tasks/{task_id}/assign")
-async def route_assign_task(task_id: int, assigned_to: int):
-    result = await assign_task(task_id, assigned_to)
+# Endpoint to designate a task
+@router.post("/tasks/{task_id}")
+async def designate_task(task_id: int):
+    result = await assign_task(task_id)
     return {"message": result}
 
 # Endpoint to count completed tasks by priority in a project
-@router.get("/projects/{project_id}/completed-tasks")
-async def route_count_completed_tasks(project_id: int, manager_id: int):
+@router.get("/projects/{project_id}/finished-tasks")
+async def count_finished_tasks(project_id: int, manager_id: int):
     result = await count_completed_tasks(manager_id, project_id)
     return result
 
 # Endpoint to count tasks in progress by priority in a project
 @router.get("/projects/{project_id}/in-progress-tasks")
-async def route_count_in_progress_tasks(project_id: int, manager_id: int):
+async def count_in_process_tasks(project_id: int, manager_id: int):
     result = await count_in_progress_tasks(manager_id, project_id)
     return result
 
 # Endpoint to count pending tasks by priority in a project
 @router.get("/projects/{project_id}/todo-tasks")
-async def route_count_todo_tasks(project_id: int, manager_id: int):
+async def count_pending_tasks(project_id: int, manager_id: int):
     result = await count_todo_tasks(manager_id, project_id)
     return result
 
 # Endpoint to create a new member
 @router.post("/members")
-async def route_create_member(manager_id: int, member_request: UserCreateRequest):
+async def create_new_member(manager_id: int, member_request: UserCreateRequest):
     return await create_member(manager_id, member_request)
 
 # Endpoint to create a task
 @router.post("/tasks")
-async def route_create_task(task_request: TaskCreateRequest):
-    return await create_task(task_request)
+async def create_new_task(task_request: TaskCreateRequest, manager_id: int = Query(...)):
+    return await create_task(task_request, manager_id)
 
 # Endpoint to get busy members
 @router.get("/busy-members")
-async def route_get_busy_members():
+async def get_busymembers():
     return await get_busy_members()
 
 # Endpoint to get members free from tasks
 @router.get("/free-members")
-async def route_get_free_members():
+async def route_get_freemembers():
     return await get_free_members()

@@ -25,4 +25,5 @@ BEGIN
         SET MESSAGE_TEXT = 'A user with this email already exists';
     END IF;
 END$$
+
 DELIMITER ;

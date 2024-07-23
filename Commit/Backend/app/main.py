@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from app.models.user import UsersLoginRequest, User
+from app.models.user import UsersLoginRequest, UserCreateRequest
 from app.config.db_conexion import data_conexion
 from app.utils.utils import create_access_token, settings
 from app.routes import manager
@@ -22,20 +22,31 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+# Endpoint to create managers users
+@app.post("/register")
+async def create_user(user_request: UserCreateRequest):
+    params = [
+        user_request.name,
+        user_request.email,
+        user_request.password
+    ]
+    result = await data_conexion.execute_procedure('sp_create_user', params)
+    return result
+
 # Endpoint to authenticate and generate access tokens
 @app.post("/login")
 async def login(user_request: UsersLoginRequest, response: Response):
     params = [
         user_request.email,
-        user_request.password_hash  # Asegúrate de que esto es el hash de la contraseña
+        user_request.password_hash
     ]
-    users = data_conexion.execute_procedure('sp_user_login', params)
+    users = await data_conexion.execute_procedure('sp_user_login', params)
 
-    # La lista de resultados puede ser vacía si no hay coincidencias
+    # The result list may be empty if there are no matches
     if users is not None and 'result' in users and len(users['result']) > 0:
         user = users['result'][0]
 
-        # Crear el token de acceso
+        # Create the access token
         access_token = create_access_token(data={"sub": user["user_id"], "role": user["role"]})
         response.set_cookie(
             key="access_token",

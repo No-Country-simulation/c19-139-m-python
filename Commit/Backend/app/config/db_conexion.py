@@ -38,7 +38,7 @@ class DataConexion:
             print("Critical database connection error: Database server is not available or parameters are incorrect", e)
             return None
 
-    def execute_procedure(self, procedure_name, params=[]):
+    async def execute_procedure(self, procedure_name, params=[]):
         """
         Method for executing a stored procedure that returns results.
 
