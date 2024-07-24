@@ -19,10 +19,9 @@ BEGIN
     WHERE email = p_email;
 
     IF v_user_id IS NULL THEN
-        SELECT u.user_id, u.password_hash, 'member' AS role INTO v_user_id, v_password_hash, v_user_role
-        FROM Users u
-        JOIN Project_Members pm ON u.user_id = pm.user_id
-        WHERE u.email = p_email;
+        SELECT member_id, member_password, role INTO v_user_id, v_password_hash, v_user_role
+        FROM Project_Members
+        WHERE member_email = p_email;
     END IF;
 
     IF v_user_id IS NULL THEN
