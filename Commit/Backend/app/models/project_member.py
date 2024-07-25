@@ -12,12 +12,10 @@ class AvailabilityEnum(str, Enum):
     busy = 'busy'
 
 class ProjectMember(BaseModel):
-    member_id: Optional[int]
     project_id: int
+    member_name: str
+    member_email: EmailStr
+    member_password: str
     role: str
     seniority: SeniorityEnum
     availability: AvailabilityEnum
-    member_email: EmailStr
-    member_name: str
-    member_password: str
-    created_at: Optional[str]
