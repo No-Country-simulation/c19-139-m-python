@@ -16,21 +16,21 @@ class TaskPriorityEnum(str, Enum):
 class Task(BaseModel):
     task_id: Optional[int]
     project_id: int
-    assigned_to: int
+    assigned_member_id: int
     title: str
     description: Optional[str]
     status: TaskStatusEnum
     priority: TaskPriorityEnum
-    start_date: Optional[str]
-    due_date: Optional[str]
-    created_at: Optional[str]
+    start_date: Optional[date]
+    due_date: Optional[date]
+    created_at: Optional[date]
 
 class TaskCreateRequest(BaseModel):
     project_id: int
-    assigned_to: int
+    assigned_member_id: Optional[int] = None
     title: str
     description: Optional[str] = None
-    status: Optional[str] = 'to do'
-    priority: Optional[str] = 'medium'
-    start_date: Optional[str]
-    due_date: Optional[date] = None
+    status: TaskStatusEnum
+    priority: TaskPriorityEnum
+    start_date: Optional[date]
+    due_date: Optional[date]
