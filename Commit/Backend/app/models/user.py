@@ -26,9 +26,9 @@ class UserCreateRequest(BaseModel):
     password: str
 
 class UserUpdateRequest(BaseModel):
-    user_id: int
     email: Optional[EmailStr] = None
-    password: Optional[str] = None
+    new_email: Optional[EmailStr] = None
+    new_password: Optional[str] = None
 
 class UserAssignRequest(BaseModel):
     manager_id: int
