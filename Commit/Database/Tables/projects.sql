@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS Projects;
 CREATE TABLE Projects (
     project_id INT PRIMARY KEY AUTO_INCREMENT,
     manager_id INT,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     start_date DATE,
     due_date DATE,

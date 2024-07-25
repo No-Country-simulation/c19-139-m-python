@@ -1,6 +1,7 @@
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_view_project_details $$
+
 CREATE PROCEDURE sp_view_project_details(
     IN p_project_id INT,
     IN p_manager_id INT
@@ -32,13 +33,14 @@ BEGIN
                 p.project_id = p_project_id;
 
             SELECT 
-                u.user_id,
-                u.name,
-                u.email,
-                pm.role
+                pm.member_id,
+                pm.member_name,
+                pm.member_email,
+                pm.role,
+                pm.seniority,
+                pm.availability
             FROM 
                 Project_Members pm
-                JOIN Users u ON pm.user_id = u.user_id
             WHERE 
                 pm.project_id = p_project_id;
 
@@ -52,7 +54,7 @@ BEGIN
                 u.name AS assigned_to_name
             FROM 
                 Tasks t
-                LEFT JOIN Users u ON t.assigned_to = u.user_id
+                LEFT JOIN Users u ON t.assigned_member_id = u.user_id
             WHERE 
                 t.project_id = p_project_id;
 
@@ -102,18 +104,19 @@ BEGIN
                 COUNT(*) AS task_count
             FROM 
                 Tasks t
-                LEFT JOIN Users u ON t.assigned_to = u.user_id
+                LEFT JOIN Users u ON t.assigned_member_id = u.user_id
             WHERE 
                 t.project_id = p_project_id
             GROUP BY 
                 u.name, t.status;
         ELSE
             SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Manager does not own this project or project does not exist';
+            SET MESSAGE_TEXT = 'Manager does not own this project or the project does not exist.';
         END IF;
     ELSE
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Only managers can view project details';
+        SET MESSAGE_TEXT = 'Only managers can view project details.';
     END IF;
 END$$
+
 DELIMITER ;
