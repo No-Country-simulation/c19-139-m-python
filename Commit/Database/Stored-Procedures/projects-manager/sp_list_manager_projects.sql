@@ -1,6 +1,7 @@
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS sp_list_manager_projects $$
+
 CREATE PROCEDURE sp_list_manager_projects(
     IN p_manager_id INT
 )
@@ -19,17 +20,15 @@ BEGIN
             p.start_date,
             p.due_date,
             p.status,
-            COUNT(pm.user_id) AS member_count
+            p.created_at
         FROM 
             Projects p
-            LEFT JOIN Project_Members pm ON p.project_id = pm.project_id
         WHERE 
-            p.manager_id = p_manager_id
-        GROUP BY 
-            p.project_id, p.name, p.description, p.start_date, p.due_date, p.status;
+            p.manager_id = p_manager_id;
     ELSE
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Only managers can list their projects';
     END IF;
 END$$
+
 DELIMITER ;

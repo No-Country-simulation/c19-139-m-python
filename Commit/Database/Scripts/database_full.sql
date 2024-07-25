@@ -1,8 +1,8 @@
 CREATE SCHEMA IF NOT EXISTS db_commit;
 
 USE db_commit;
-DROP TABLE IF EXISTS Users;
 
+DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
@@ -13,7 +13,6 @@ CREATE TABLE Users (
 );
 
 DROP TABLE IF EXISTS Projects;
-
 CREATE TABLE Projects (
     project_id INT PRIMARY KEY AUTO_INCREMENT,
     manager_id INT,
@@ -27,24 +26,26 @@ CREATE TABLE Projects (
 );
 
 DROP TABLE IF EXISTS Project_Members;
-
 CREATE TABLE Project_Members (
     member_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
     project_id INT,
     role VARCHAR(255),
     seniority ENUM('trainee', 'junior', 'senior'),
     availability ENUM('free', 'busy') DEFAULT 'free',
+    member_email VARCHAR(255) NOT NULL,
+    member_name VARCHAR(255) NOT NULL,
+    member_password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (project_id) REFERENCES Projects(project_id)
 );
+
+DROP TABLE IF EXISTS Tasks;
 
 CREATE TABLE Tasks (
     task_id INT PRIMARY KEY AUTO_INCREMENT,
     project_id INT,
-    assigned_to INT,
-    title VARCHAR(255) NOT NULL,
+    assigned_member_id INT,
+    title VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     status ENUM('to do', 'in progress', 'completed') DEFAULT 'to do',
     priority ENUM('low', 'medium', 'high') DEFAULT 'medium',
@@ -52,11 +53,10 @@ CREATE TABLE Tasks (
     due_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (project_id) REFERENCES Projects(project_id),
-    FOREIGN KEY (assigned_to) REFERENCES Users(user_id)
+    FOREIGN KEY (assigned_member_id) REFERENCES Project_Members(member_id)
 );
 
 DROP TABLE IF EXISTS Documents;
-
 CREATE TABLE Documents (
     document_id INT PRIMARY KEY AUTO_INCREMENT,
     project_id INT,
@@ -69,7 +69,6 @@ CREATE TABLE Documents (
 );
 
 DROP TABLE IF EXISTS Reports;
-
 CREATE TABLE Reports (
     report_id INT PRIMARY KEY AUTO_INCREMENT,
     project_id INT,
@@ -81,7 +80,6 @@ CREATE TABLE Reports (
 );
 
 DROP TABLE IF EXISTS Comments;
-
 CREATE TABLE Comments (
     comment_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -95,7 +93,6 @@ CREATE TABLE Comments (
 );
 
 DROP TABLE IF EXISTS Messages;
-
 CREATE TABLE Messages (
     message_id INT PRIMARY KEY AUTO_INCREMENT,
     sender_id INT,
@@ -107,7 +104,6 @@ CREATE TABLE Messages (
 );
 
 DROP TABLE IF EXISTS Notifications;
-
 CREATE TABLE Notifications (
     notification_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,

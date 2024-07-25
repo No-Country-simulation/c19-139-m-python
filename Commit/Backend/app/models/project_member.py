@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 from enum import Enum
 
@@ -12,10 +12,10 @@ class AvailabilityEnum(str, Enum):
     busy = 'busy'
 
 class ProjectMember(BaseModel):
-    member_id: Optional[int]
-    user_id: int
     project_id: int
+    member_name: str
+    member_email: EmailStr
+    member_password: str
     role: str
     seniority: SeniorityEnum
     availability: AvailabilityEnum
-    created_at: Optional[str]

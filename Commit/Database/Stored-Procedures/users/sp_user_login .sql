@@ -19,6 +19,12 @@ BEGIN
     WHERE email = p_email;
 
     IF v_user_id IS NULL THEN
+        SELECT member_id, member_password, role INTO v_user_id, v_password_hash, v_user_role
+        FROM Project_Members
+        WHERE member_email = p_email;
+    END IF;
+
+    IF v_user_id IS NULL THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Invalid email or password';
     ELSE
