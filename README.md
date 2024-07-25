@@ -7,4 +7,4 @@
 2. [Installation](#Installation)
 3. [Usage](#Usage)
 4. [Team](#Team)
-5. [Licencia](#licencia)
+5. [License](#License)
