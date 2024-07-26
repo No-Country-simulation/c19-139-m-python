@@ -34,3 +34,7 @@ class TaskCreateRequest(BaseModel):
     priority: TaskPriorityEnum
     start_date: Optional[date]
     due_date: Optional[date]
+
+class EditTaskRequest(BaseModel):
+    assigned_member_id: int
+    status: TaskStatusEnum
