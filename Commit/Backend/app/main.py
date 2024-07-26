@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.models.user import UsersLoginRequest, UserCreateRequest
 from app.config.db_conexion import data_conexion
 from app.utils.utils import create_access_token, settings
-from app.routes import manager
+from app.routes import manager, member
 import jwt
 
 # Setting allowed origins for CORS
@@ -85,7 +85,9 @@ async def user_token_validation(request: Request, call_next):
 
     return await call_next(request)
 
+
 app.include_router(manager.router, prefix="/manager", tags=["Manager"])
+app.include_router(member.router, prefix="/member", tags=["Member"])
 
 
 if __name__ == "__main__":
