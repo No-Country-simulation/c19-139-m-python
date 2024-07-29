@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class Message(BaseModel):
     message_id: Optional[int]
     sender_id: int

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class Document(BaseModel):
     document_id: Optional[int]
     project_id: int

@@ -16,7 +16,7 @@ from app.controllers.manager_controller import (
     create_member,
     create_task,
     get_busy_members,
-    get_free_members
+    get_free_members,
 )
 
 router = APIRouter()
@@ -39,8 +39,7 @@ async def list_projects(manager_id: int):
 # Endpoint to remove member
 @router.delete("/members/{member_id}")
 async def remove_member(manager_id: int, member_id: int):
-    result = await delete_member(manager_id, member_id)
-    return result
+    return await delete_member(manager_id, member_id)
 
 # Endpoint to view details of a specific project
 @router.get("/projects/{project_id}")
@@ -50,26 +49,22 @@ async def view_project_details(project_id: int, manager_id: int):
 # Endpoint to designate a task
 @router.post("/tasks/{task_id}")
 async def designate_task(task_id: int, assigned_to: int):
-    result = await assign_task(task_id, assigned_to)
-    return {"message": result}
+    return await assign_task(task_id, assigned_to)
 
 # Endpoint to count completed tasks by priority in a project
 @router.get("/projects/{project_id}/finished-tasks")
 async def count_finished_tasks(project_id: int, manager_id: int):
-    result = await count_completed_tasks(manager_id, project_id)
-    return result
+    return await count_completed_tasks(manager_id, project_id)
 
 # Endpoint to count tasks in progress by priority in a project
 @router.get("/projects/{project_id}/in-progress-tasks")
 async def count_in_process_tasks(project_id: int, manager_id: int):
-    result = await count_in_progress_tasks(manager_id, project_id)
-    return result
+    return await count_in_progress_tasks(manager_id, project_id)
 
 # Endpoint to count pending tasks by priority in a project
 @router.get("/projects/{project_id}/todo-tasks")
 async def count_pending_tasks(project_id: int, manager_id: int):
-    result = await count_todo_tasks(manager_id, project_id)
-    return result
+    return await count_todo_tasks(manager_id, project_id)
 
 # Endpoint to create a new member
 @router.post("/members")

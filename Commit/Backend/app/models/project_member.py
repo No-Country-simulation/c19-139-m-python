@@ -2,14 +2,17 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from enum import Enum
 
+
 class SeniorityEnum(str, Enum):
-    trainee = 'trainee'
-    junior = 'junior'
-    senior = 'senior'
+    trainee = "trainee"
+    junior = "junior"
+    senior = "senior"
+
 
 class AvailabilityEnum(str, Enum):
-    free = 'free'
-    busy = 'busy'
+    free = "free"
+    busy = "busy"
+
 
 class ProjectMember(BaseModel):
     project_id: int
