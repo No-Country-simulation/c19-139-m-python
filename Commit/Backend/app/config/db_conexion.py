@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
-import mysql.connector
-from mysql.connector import Error
+import pandas as pd
+from sqlalchemy import create_engine
+from sqlalchemy.exc import SQLAlchemyError
 
 # Load environment variables from .env file
 load_dotenv()
@@ -9,10 +10,7 @@ load_dotenv()
 class DataConexion:
     def connect(self):
         """
-        Method to create and return a connection to the database.
-
-        - Uses environment variables to obtain connection information.
-        - Returns a connection object.
+        Method to create and return a connection to the database using SQLAlchemy.
         """
         try:
             host = os.getenv("DB_HOST")
@@ -20,55 +18,65 @@ class DataConexion:
             password = os.getenv("DB_PASSWORD")
             database = os.getenv("DB_NAME")
 
-            conexion = mysql.connector.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=database
-            )
+            # Create SQLAlchemy engine
+            connection_string = f"mysql+mysqlconnector://{user}:{password}@{host}/{database}"
+            engine = create_engine(connection_string)
 
-            if conexion.is_connected():
+            # Test connection
+            with engine.connect() as connection:
                 print("Welcome to the database!")
-                return conexion
-            else:
-                print("Could not connect to database: incorrect connection parameters or database not found")
-                return None
-        
-        except Error as e:
+            return engine
+
+        except SQLAlchemyError as e:
             print("Critical database connection error: Database server is not available or parameters are incorrect", e)
             return None
 
-    async def execute_procedure(self, procedure_name, params=[]):
+    def execute_procedure(self, procedure_name, params=[]):
         """
         Method for executing a stored procedure that returns results.
-
-        - procedure_name: Name of the stored procedure to execute.
-        - params: List of parameters for the stored procedure.
-
-        Returns a dictionary with the results and the parameters used.
         """
         results = []
         args = params
-        cnn = self.connect()
-        if cnn is not None:
+        engine = self.connect()
+        cursor = None
+        if engine is not None:
             try:
-                cursor = cnn.cursor(dictionary=True)
+                connection = engine.raw_connection()
+                cursor = connection.cursor(dictionary=True)
                 cursor.callproc(procedure_name, params)
 
                 for result in cursor.stored_results():
                     results = result.fetchall()
-            
-                cnn.commit()
 
-            except Error as e:
-                print(e)
+                connection.commit()
+
+            except SQLAlchemyError as e:
+                print("Error executing procedure:", e)
             finally:
-                if cnn and cnn.is_connected():
+                if cursor:
                     cursor.close()
-                    cnn.close()
-            return {'result': results, 'params': args}
+                if connection:
+                    connection.close()
+        return {'result': results, 'params': args}
+
+    def export_to_excel(self, table_names):
+        """
+        Method to export tables to an Excel file with each table in a separate sheet.
+        """
+        filename = os.getenv("EXCEL_EXPORT_PATH")
+        engine = self.connect()
+        if engine is not None:
+            try:
+                with pd.ExcelWriter(filename, engine='openpyxl') as writer:
+                    for table_name in table_names:
+                        query = f"SELECT * FROM {table_name}"
+                        df = pd.read_sql(query, engine)
+                        df.to_excel(writer, sheet_name=table_name, index=False)
+                print(f"Data exported to {filename}")
+            except SQLAlchemyError as e:
+                print("Error exporting to Excel:", e)
         else:
-            return {'result': [], 'params': args}
+            print("Failed to connect to the database")
 
 # An instance of the DataConexion class is created
 data_conexion = DataConexion()
